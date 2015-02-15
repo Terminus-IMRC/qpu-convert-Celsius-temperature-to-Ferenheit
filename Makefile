@@ -7,7 +7,7 @@ CC:=gcc
 RM:=rm -f
 SUDO:=sudo
 QBIN2HEX:=./qbin2hex.py
-QCC=./qtc.py
+QCC=./qtc
 TOCLEAN:=
 
 ALLDEPS+=$(QBIN2HEX) $(QCC)
