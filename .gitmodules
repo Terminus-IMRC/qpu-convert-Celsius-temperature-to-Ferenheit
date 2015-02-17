@@ -1,3 +1,6 @@
 [submodule "mailbox"]
 	path = mailbox
 	url = https://github.com/Terminus-IMRC/mailbox.git
+[submodule "qpu-trivial-assembler"]
+	path = qpu-trivial-assembler
+	url = https://github.com/Terminus-IMRC/qpu-trivial-assembler.git

@@ -60,6 +60,11 @@ $(PROG): $(HEXS) $(OBJS) $(ALLDEPS)
 %.qasm.bin: %.qasm $(ALLDEPS)
 	$(QCC) <$< >$@
 
+./qtc:
+	make -C qpu-trivial-assembler/
+	rm -f $@
+	cp qpu-trivial-assembler/qtc ./
+
 .PHONY: run
 run: $(PROG)
 	sudo ./$<
