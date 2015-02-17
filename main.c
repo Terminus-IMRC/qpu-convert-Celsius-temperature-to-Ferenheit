@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 		goto cleanup;
 	}
 	void *gpu_pointer = (void *) mem_lock(mb, handle);
-	void *arm_pointer = mapmem((unsigned) gpu_pointer + GPU_MEM_MAP, size);
+	void *arm_pointer = mapmem_cpu((unsigned) gpu_pointer + GPU_MEM_MAP, size);
 #ifdef DEBUG
 	printf("handle=%d gpu_pointer=%p arm_pointer=%p\n", handle, gpu_pointer, arm_pointer);
 #endif /* DEBUG */
@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
 	cleanup:
 	/* Release GPU memory */
 	if (arm_pointer) {
-		unmapmem(arm_pointer, size);
+		unmapmem_cpu(arm_pointer, size);
 	}
 	if (handle) {
 		mem_unlock(mb, handle);

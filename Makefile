@@ -1,8 +1,8 @@
 PROG:=c2f
 QASMS:=c2f.qasm
-SRCS:=mailbox.c main.c pagesize.c
+SRCS:=main.c mailbox/mailbox.c mailbox/pagesize.c
 ALLDEPS:=
-CFLAGS:=-Wall -Wextra
+CFLAGS:=-Wall -Wextra -Imailbox/
 CC:=gcc
 RM:=rm -f
 SUDO:=sudo
