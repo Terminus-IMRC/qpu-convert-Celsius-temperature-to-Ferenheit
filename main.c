@@ -45,6 +45,9 @@ int main(int argc, char *argv[])
 	}
 	void *gpu_pointer = (void *) mem_lock(mb, handle);
 	void *arm_pointer = mapmem((unsigned) gpu_pointer + GPU_MEM_MAP, size);
+#ifdef DEBUG
+	printf("handle=%d gpu_pointer=%p arm_pointer=%p\n", handle, gpu_pointer, arm_pointer);
+#endif /* DEBUG */
 
 	/* Fill result buffer with 0x55 */
 	memset(arm_pointer, 0, size);
