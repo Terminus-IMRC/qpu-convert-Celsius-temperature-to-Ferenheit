@@ -1,6 +1,6 @@
 PROG:=c2f
 QASMS:=c2f.qasm
-SRCS:=main.c mailbox/mailbox.c mailbox/pagesize.c
+SRCS:=main.c mailbox/xmailbox.c mailbox/mailbox.c mailbox/pagesize.c
 ALLDEPS:=
 CFLAGS:=-Wall -Wextra -Imailbox/
 CC:=gcc

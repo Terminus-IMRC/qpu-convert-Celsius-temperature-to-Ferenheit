@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
+#include "xmailbox.h"
 #include "mailbox.h"
 
 #define GPU_QPUS 1
@@ -21,7 +22,7 @@ unsigned int program[] = {
 int main(int argc, char *argv[])
 {
 	int i;
-	int mb = mbox_open();
+	int mb = xmbox_open();
 
 	if (argc != 2) {
 		fprintf(stderr, "Specify a Celcius temperature to convert to Ferenheit\n");
@@ -38,12 +39,8 @@ int main(int argc, char *argv[])
 	/* Allocate GPU memory and map it into ARM address space */
 	unsigned size = 4096;
 	unsigned align = 4096;
-	unsigned handle = mem_alloc(mb, size, align, GPU_MEM_FLG);
-	if (!handle) {
-		printf("Failed to allocate GPU memory.");
-		goto cleanup;
-	}
-	void *gpu_pointer = (void *) mem_lock(mb, handle);
+	unsigned handle = xmem_alloc(mb, size, align, GPU_MEM_FLG);
+	void *gpu_pointer = (void *) xmem_lock(mb, handle);
 	void *arm_pointer = mapmem_cpu((unsigned) gpu_pointer + GPU_MEM_MAP, size);
 #ifdef DEBUG
 	printf("handle=%d gpu_pointer=%p arm_pointer=%p\n", handle, gpu_pointer, arm_pointer);
@@ -135,8 +132,8 @@ int main(int argc, char *argv[])
 		unmapmem_cpu(arm_pointer, size);
 	}
 	if (handle) {
-		mem_unlock(mb, handle);
-		mem_free(mb, handle);
+		xmem_unlock(mb, handle);
+		xmem_free(mb, handle);
 	}
 
 	/* Release QPU */
@@ -145,7 +142,7 @@ int main(int argc, char *argv[])
 	}
 
 	/* Release mailbox */
-	mbox_close(mb);
+	xmbox_close(mb);
 
 	return 0;
 }
