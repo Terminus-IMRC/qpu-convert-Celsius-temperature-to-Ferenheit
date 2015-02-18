@@ -3,3 +3,6 @@ c2f
 *.c.o
 *.qasm.bin
 *.c.d
+
+qtc
+qbin2hex.py
