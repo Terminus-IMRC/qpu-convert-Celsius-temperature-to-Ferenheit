@@ -4,3 +4,6 @@
 [submodule "qpu-trivial-assembler"]
 	path = qpu-trivial-assembler
 	url = https://github.com/Terminus-IMRC/qpu-trivial-assembler.git
+[submodule "qpu-bin-to-hex"]
+	path = qpu-bin-to-hex
+	url = https://github.com/Terminus-IMRC/qpu-bin-to-hex.git

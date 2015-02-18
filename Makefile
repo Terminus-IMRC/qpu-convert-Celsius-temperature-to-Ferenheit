@@ -65,6 +65,9 @@ $(PROG): $(HEXS) $(OBJS) $(ALLDEPS)
 	rm -f $@
 	cp qpu-trivial-assembler/qtc ./
 
+./qbin2hex.py:
+	ln -s qpu-bin-to-hex/qbin2hex.py $@
+
 .PHONY: run
 run: $(PROG)
 	sudo ./$<
