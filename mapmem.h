@@ -2,6 +2,7 @@
 #define __MAPMEM_H_INCLUDED__
 
 #include <stdint.h>
+#include <sys/types.h>
 
 #ifndef BCM2835_V3D_OFFSET
 #define BCM2835_V3D_OFFSET 0x20c00000
