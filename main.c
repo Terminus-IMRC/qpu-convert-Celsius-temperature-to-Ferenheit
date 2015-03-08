@@ -98,13 +98,6 @@ int main(int argc, char *argv[])
 		*p++ = (unsigned) (gpu_pointer + 1024 + i * 16 * 6 * 4);
 	}
 
-	/* Build QPU Launch messages */
-	unsigned *qpu_msg = p;
-	for (i = 0; i < GPU_QPUS; ++i) {
-		*p++ = as_gpu_address(qpu_uniform + i * 4 * 3);
-		*p++ = as_gpu_address(qpu_code);
-	}
-
 #ifdef DEBUG
 	// Test buffer
 	printf("before:");
