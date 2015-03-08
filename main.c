@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 202112L
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,6 +6,8 @@
 
 #include "xmailbox.h"
 #include "mailbox.h"
+#include "mapmem.h"
+#include "v3d.h"
 
 #define GPU_QPUS 1
 
@@ -23,6 +26,7 @@ int main(int argc, char *argv[])
 {
 	int i;
 	int mb = xmbox_open();
+	uint32_t *v3d_p;
 
 	if (argc != 2) {
 		fprintf(stderr, "Specify a Celcius temperature to convert to Ferenheit\n");
@@ -35,15 +39,21 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Unable to enable QPU. Check your firmware is latest.");
 		goto cleanup;
 	}
+	v3d_init();
+	v3d_p=mapmem(BCM2836_V3D_OFFSET);
 
 	/* Allocate GPU memory and map it into ARM address space */
 	unsigned size = 4096;
 	unsigned align = 4096;
-	unsigned handle = xmem_alloc(mb, size, align, GPU_MEM_FLG);
-	void *gpu_pointer = (void *) xmem_lock(mb, handle);
+
+	void *gpu_pointer;
+	if(posix_memalign((void**)&gpu_pointer, align, size) != 0){
+		fprintf(stderr, "error on posix_memalign\n");
+		exit(EXIT_FAILURE);
+	}
 	void *arm_pointer = mapmem_cpu((unsigned) gpu_pointer + GPU_MEM_MAP, size);
 #ifdef DEBUG
-	printf("handle=%d gpu_pointer=%p arm_pointer=%p\n", handle, gpu_pointer, arm_pointer);
+	printf("gpu_pointer=%p arm_pointer=%p\n", gpu_pointer, arm_pointer);
 #endif /* DEBUG */
 
 	/* Fill result buffer with 0x55 */
@@ -106,10 +116,17 @@ int main(int argc, char *argv[])
 #endif /* DEBUG */
 
 	/* Launch QPU program and block till its done */
-	unsigned r = execute_qpu(mb, GPU_QPUS, as_gpu_address(qpu_msg), 1, 3000);
-#ifdef DEBUG
-	printf("qpu exec %p returns %d\n", gpu_pointer + ((void *)qpu_msg - arm_pointer), r);
-#endif /* DEBUG */
+	v3d_reset_all(v3d_p);
+	if(v3d_read(v3d_p, V3D_QPURQCC) != 0){
+		fprintf(stderr, "error: program count is not zero even after resetting\n");
+		printf("%d\n", v3d_read(v3d_p, V3D_QPURQCC));
+		exit(EXIT_FAILURE);
+	}
+	v3d_write(v3d_p, V3D_QPURQUL, 1024);
+	v3d_write(v3d_p, V3D_QPURQUA, as_gpu_address(qpu_uniform));
+	v3d_write(v3d_p, V3D_QPURQPC, as_gpu_address(qpu_code));
+	while(v3d_read(v3d_p, V3D_QPURQCC) == 0)
+		;
 
 #ifdef DEBUG
 	// Test buffer
@@ -131,10 +148,7 @@ int main(int argc, char *argv[])
 	if (arm_pointer) {
 		unmapmem_cpu(arm_pointer, size);
 	}
-	if (handle) {
-		xmem_unlock(mb, handle);
-		xmem_free(mb, handle);
-	}
+	free(gpu_pointer);
 
 	/* Release QPU */
 	if (qpu_enabled) {
