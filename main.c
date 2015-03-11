@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 #endif /* DEBUG */
 
 	/* Launch QPU program and block till its done */
-	v3d_reset_all(v3d_p);
+	v3d_reset_SRQCS(v3d_p);
 	if(v3d_read(v3d_p, V3D_QPURQCC) != 0){
 		fprintf(stderr, "error: program count is not zero even after resetting\n");
 		printf("%d\n", v3d_read(v3d_p, V3D_QPURQCC));
