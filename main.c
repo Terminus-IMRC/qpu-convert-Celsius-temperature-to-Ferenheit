@@ -129,6 +129,7 @@ int main(int argc, char *argv[])
 #endif /* DEBUG */
 
 #ifdef DEBUG
+	printf("Re:%d We:%d\n", v3d_read(v3d_p, V3D_VPMERR), v3d_read(v3d_p, V3D_VPMEWR));
 	printf("In Celsius: %d\nIn Ferenheit: %d\n", ((unsigned*)arm_pointer)[512/sizeof(unsigned)], ((unsigned*)arm_pointer)[1024/sizeof(unsigned)]);
 #endif /* DEBUG */
 	printf("%d\n", ((unsigned *) arm_pointer)[1024 / sizeof(unsigned)]);
