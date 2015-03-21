@@ -46,11 +46,8 @@ int main(int argc, char *argv[])
 	unsigned size = 4096;
 	unsigned align = 4096;
 
-	void *gpu_pointer;
-	if(posix_memalign((void**)&gpu_pointer, align, size) != 0){
-		fprintf(stderr, "error on posix_memalign\n");
-		exit(EXIT_FAILURE);
-	}
+	unsigned handle = xmem_alloc(mb, size, align, GPU_MEM_FLG);
+	unsigned gpu_pointer = xmem_lock(mb, handle);
 	void *arm_pointer = mapmem_cpu((unsigned) gpu_pointer + GPU_MEM_MAP, size);
 #ifdef DEBUG
 	printf("gpu_pointer=%p arm_pointer=%p\n", gpu_pointer, arm_pointer);
@@ -141,7 +138,8 @@ int main(int argc, char *argv[])
 	if (arm_pointer) {
 		unmapmem_cpu(arm_pointer, size);
 	}
-	free(gpu_pointer);
+	xmem_unlock(mb, handle);
+	xmem_free(mb, gpu_pointer);
 
 	/* Release QPU */
 	if (qpu_enabled) {
