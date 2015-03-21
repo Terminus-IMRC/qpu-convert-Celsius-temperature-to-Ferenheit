@@ -6,7 +6,7 @@
 
 #include "xmailbox.h"
 #include "mailbox.h"
-#include "mapmem.h"
+#include "mapmem_v3d.h"
 #include "v3d.h"
 
 #define GPU_QPUS 1
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 		goto cleanup;
 	}
 	v3d_init();
-	v3d_p=mapmem(BCM2836_V3D_OFFSET);
+	v3d_p=mapmem_v3d();
 
 	/* Allocate GPU memory and map it into ARM address space */
 	unsigned size = 4096;

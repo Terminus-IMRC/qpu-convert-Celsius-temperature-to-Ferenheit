@@ -1,9 +1,10 @@
 PROG:=c2f
 QASMS:=c2f.qasm
-SRCS:=main.c mapmem.c mailbox/xmailbox.c mailbox/mailbox.c mailbox/pagesize.c
-LDLIBS:=libvc4v3d/libvc4v3d.a
+SRCS:=main.c mapmem_v3d.c mailbox/xmailbox.c mailbox/mailbox.c mailbox/pagesize.c
+LIBS:=libvc4v3d/libvc4v3d.a
+LDLIBS:=$(LIBS) -L/opt/vc/lib -lbcm_host
 ALLDEPS:=
-CFLAGS:=-Wall -Wextra -Imailbox/ -Ilibvc4v3d/ -g
+CFLAGS:=-Wall -Wextra -Imailbox/ -Ilibvc4v3d/ -I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux -g
 CC:=gcc
 RM:=rm -f
 SUDO:=sudo
@@ -49,7 +50,7 @@ main.c.d: c2f.qasm.bin.hex
 libvc4v3d/libvc4v3d.a:
 	make -C libvc4v3d/
 
-$(PROG): $(HEXS) $(OBJS) $(LOADLIBES) $(LDLIBS) $(ALLDEPS)
+$(PROG): $(HEXS) $(OBJS) $(LIBS) $(ALLDEPS)
 	$(LINK.o) $(OUTPUT_OPTION) $(OBJS) $(LOADLIBES) $(LDLIBS)
 
 %.c.o: %.c $(ALLDEPS)

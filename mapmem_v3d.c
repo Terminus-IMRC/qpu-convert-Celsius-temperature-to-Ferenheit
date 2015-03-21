@@ -8,11 +8,16 @@
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <errno.h>
+#include <bcm_host.h>
 #include "pagesize.h"
 
 #ifndef DEVMEM
 #define DEVMEM "/dev/mem"
 #endif /* DEVMEM */
+
+#ifndef V3D_OFFSET_FROM_PERI
+#define V3D_OFFSET_FROM_PERI 0x00c00000
+#endif /* V3D_OFFSET_FROM_PERI */
 
 #ifndef V3D_LENGTH
 #define V3D_LENGTH ((0x00f20-0x00000+0x4))
@@ -20,15 +25,20 @@
 
 static uint32_t *p_orig;
 
-uint32_t* mapmem();
-void unmapmem();
+uint32_t* mapmem_v3d();
+void unmapmem_v3d();
 
-uint32_t* mapmem(const off_t V3D_OFFSET)
+uint32_t* mapmem_v3d()
 {
 	int fd;
 	long pagesize;
 	uint32_t *p;
+	off_t V3D_OFFSET;
 	off_t offset_from_v3d;
+
+	bcm_host_init();
+	V3D_OFFSET=bcm_host_get_peripheral_address()+V3D_OFFSET_FROM_PERI;
+	bcm_host_deinit();
 
 	if((fd=open(DEVMEM, O_RDWR|O_SYNC/*|O_DIRECT*/))==-1){
 		fprintf(stderr, "%s:%d: error: open: %s: %s\n", __FILE__, __LINE__, DEVMEM, strerror(errno));
@@ -58,7 +68,7 @@ uint32_t* mapmem(const off_t V3D_OFFSET)
 	return p;
 }
 
-void unmapmem()
+void unmapmem_v3d()
 {
 	int r;
 
