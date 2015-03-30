@@ -2,9 +2,9 @@ PROG:=c2f
 QASMS:=c2f.qasm
 SRCS:=main.c mapmem_v3d.c mailbox/xmailbox.c mailbox/mailbox.c mailbox/pagesize.c
 LIBS:=libvc4v3d/libvc4v3d.a
-LDLIBS:=$(LIBS) -lbcm_host
+LDLIBS_LOCAL:=$(LIBS) -lbcm_host
 ALLDEPS:=
-CFLAGS:=-Wall -Wextra -Imailbox/ -Ilibvc4v3d/ -g
+CFLAGS_LOCAL:=-Wall -Wextra -Imailbox/ -Ilibvc4v3d/ -g
 CC:=gcc
 RM:=rm -f
 SUDO:=sudo
@@ -21,8 +21,8 @@ HEXS:=$(BINS:%.bin=%.bin.hex)
 OBJS:=$(SRCS:%.c=%.c.o)
 DEPS:=$(SRCS:%.c=%.c.d)
 
-COMPILE.c=$(CC) $(CFLAGS) -c
-COMPILE.d=$(CC) $(CFLAGS) -M -MP -MT $<.o -MF $@
+COMPILE.c=$(CC) $(CFLAGS) $(CFLAGS_LOCAL) -c
+COMPILE.d=$(CC) $(CFLAGS) $(CFLAGS_LOCAL) -M -MP -MT $<.o -MF $@
 LINK.o=$(CC) $(LDFLAGS)
 
 all: $(PROG)
@@ -51,7 +51,7 @@ libvc4v3d/libvc4v3d.a:
 	make -C libvc4v3d/
 
 $(PROG): $(HEXS) $(OBJS) $(LIBS) $(ALLDEPS)
-	$(LINK.o) $(OUTPUT_OPTION) $(OBJS) $(LOADLIBES) $(LDLIBS)
+	$(LINK.o) $(OUTPUT_OPTION) $(OBJS) $(LOADLIBES) $(LDLIBS) $(LDLIBS_LOCAL)
 
 %.c.o: %.c $(ALLDEPS)
 	$(COMPILE.c) $(OUTPUT_OPTION) $<
