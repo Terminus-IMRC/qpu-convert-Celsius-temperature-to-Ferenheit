@@ -11,8 +11,6 @@ QBIN2HEX:=qbin2hex.py
 QCC=qtc
 TOCLEAN:=
 
-ALLDEPS+=$(QBIN2HEX) $(QCC)
-
 TARGETS:=all $(PROG) %.c.o %.c.d run clean
 TARGETS_NO_NEED_DEPS:=clean
 BINS:=$(QASMS:%.qasm=%.qasm.bin)
@@ -60,14 +58,6 @@ $(PROG): $(HEXS) $(OBJS) $(ALLDEPS)
 
 %.qasm.bin: %.qasm $(ALLDEPS)
 	$(QCC) <$< >$@
-
-./qtc:
-	make -C qpu-trivial-assembler/
-	rm -f $@
-	cp qpu-trivial-assembler/qtc ./
-
-./qbin2hex.py:
-	ln -s qpu-bin-to-hex/qbin2hex.py $@
 
 .PHONY: run
 run: $(PROG)
