@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
 		goto cleanup;
 	}
 	v3d_init();
+	v3d_utils_init();
 	v3d_p=mapmem_cpu(v3d_peripheral_addr(), V3D_LENGTH);
 
 	/* Allocate GPU memory and map it into ARM address space */
