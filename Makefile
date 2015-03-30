@@ -1,10 +1,9 @@
 PROG:=c2f
 QASMS:=c2f.qasm
-SRCS:=main.c mapmem_v3d.c mailbox/xmailbox.c mailbox/mailbox.c mailbox/pagesize.c
-LIBS:=libvc4v3d/libvc4v3d.a
-LDLIBS_LOCAL:=$(LIBS) -lbcm_host
+SRCS:=main.c mapmem_v3d.c
+LDLIBS_LOCAL:=-lbcm_host -lmailbox -lvc4v3d
 ALLDEPS:=
-CFLAGS_LOCAL:=-Wall -Wextra -Imailbox/ -Ilibvc4v3d/ -g
+CFLAGS_LOCAL:=-Wall -Wextra -g
 CC:=gcc
 RM:=rm -f
 SUDO:=sudo
@@ -47,10 +46,7 @@ ALLDEPS+=$(MAKEFILE_LIST_SANS_DEPS)
 
 main.c.d: c2f.qasm.bin.hex
 
-libvc4v3d/libvc4v3d.a:
-	make -C libvc4v3d/
-
-$(PROG): $(HEXS) $(OBJS) $(LIBS) $(ALLDEPS)
+$(PROG): $(HEXS) $(OBJS) $(ALLDEPS)
 	$(LINK.o) $(OUTPUT_OPTION) $(OBJS) $(LOADLIBES) $(LDLIBS) $(LDLIBS_LOCAL)
 
 %.c.o: %.c $(ALLDEPS)
@@ -84,5 +80,4 @@ clean:
 	$(RM) $(DEPS)
 	$(RM) $(HEXS)
 	$(RM) $(BINS)
-	make -C libvc4v3d/ clean
 	$(RM) $(TOCLEAN)
