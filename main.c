@@ -143,6 +143,10 @@ int main(int argc, char *argv[])
 	xmem_unlock(mb, handle);
 	xmem_free(mb, gpu_pointer);
 
+	unmapmem_cpu(v3d_p, V3D_LENGTH);
+	v3d_utils_finalize();
+	v3d_finalize();
+
 	/* Release QPU */
 	if (qpu_enabled) {
 		qpu_enable(mb, 0);
