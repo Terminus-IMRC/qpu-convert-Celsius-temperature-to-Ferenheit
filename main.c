@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-#include "xmailbox.h"
-#include "mailbox.h"
-#include "mapmem_v3d.h"
-#include "v3d.h"
+#include "mailbox/mailbox.h"
+#include "mailbox/xmailbox.h"
+#include "v3d/v3d.h"
+#include "v3d/v3d_utils.h"
 
 #define GPU_QPUS 1
 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 		goto cleanup;
 	}
 	v3d_init();
-	v3d_p=mapmem_v3d();
+	v3d_p=mapmem_cpu(v3d_peripheral_addr(), V3D_LENGTH);
 
 	/* Allocate GPU memory and map it into ARM address space */
 	unsigned size = 4096;

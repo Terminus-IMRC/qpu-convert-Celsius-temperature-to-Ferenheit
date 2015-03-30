@@ -1,6 +1,6 @@
 PROG:=c2f
 QASMS:=c2f.qasm
-SRCS:=main.c mapmem_v3d.c
+SRCS:=main.c
 LDLIBS_LOCAL:=-lbcm_host -lmailbox -lvc4v3d
 ALLDEPS:=
 CFLAGS_LOCAL:=-Wall -Wextra -g
