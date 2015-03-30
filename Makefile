@@ -8,7 +8,7 @@ CC:=gcc
 RM:=rm -f
 SUDO:=sudo
 QBIN2HEX:=qbin2hex.py
-QCC=qtc
+QTC=qtc
 TOCLEAN:=
 
 TARGETS:=all $(PROG) %.c.o %.c.d run clean
@@ -57,7 +57,7 @@ $(PROG): $(HEXS) $(OBJS) $(ALLDEPS)
 	$(QBIN2HEX) <$< >$@
 
 %.qasm.bin: %.qasm $(ALLDEPS)
-	$(QCC) <$< >$@
+	$(QTC) <$< >$@
 
 .PHONY: run
 run: $(PROG)
