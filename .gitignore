@@ -8,3 +8,5 @@ qtc
 qbin2hex.py
 
 tags
+
+*.swp
