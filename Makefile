@@ -7,8 +7,8 @@ CFLAGS_LOCAL:=-Wall -Wextra -g
 CC:=gcc
 RM:=rm -f
 SUDO:=sudo
-QBIN2HEX:=./qbin2hex.py
-QCC=./qtc
+QBIN2HEX:=qbin2hex.py
+QCC=qtc
 TOCLEAN:=
 
 ALLDEPS+=$(QBIN2HEX) $(QCC)
