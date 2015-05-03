@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 	}
 	v3d_init();
 	v3d_utils_init();
-	v3d_p=mapmem_cpu(v3d_peripheral_addr(), V3D_LENGTH);
+	v3d_p=mapmem_cpu(BUS_TO_PHYS(v3d_peripheral_addr()), V3D_LENGTH);
 
 	/* Allocate GPU memory and map it into ARM address space */
 	unsigned size = 4096;
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
 	unsigned handle = xmem_alloc(mb, size, align, GPU_MEM_FLG);
 	unsigned gpu_pointer = xmem_lock(mb, handle);
-	void *arm_pointer = mapmem_cpu((unsigned) gpu_pointer + GPU_MEM_MAP, size);
+	void *arm_pointer = mapmem_cpu(BUS_TO_PHYS((unsigned) gpu_pointer + GPU_MEM_MAP), size);
 #ifdef DEBUG
 	printf("gpu_pointer=%p arm_pointer=%p\n", gpu_pointer, arm_pointer);
 #endif /* DEBUG */
