@@ -4,10 +4,8 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-#include "mailbox/mailbox.h"
-#include "mailbox/xmailbox.h"
-#include "v3d/v3d.h"
-#include "v3d/v3d_utils.h"
+#include "mailbox.h"
+#include "v3d.h"
 
 #define GPU_QPUS 1
 
